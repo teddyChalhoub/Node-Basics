@@ -36,8 +36,7 @@ function onDataReceived(text) {
   let listComp = /list/;
   let addComp = /add/;
   let rmComp = /remove/;
-
-  // console.log(text.match(nbList)[0]);
+  let editComp = /edit/;
 
   if (text === "quit\n" || text === "exit\n") {
     quit();
@@ -47,6 +46,8 @@ function onDataReceived(text) {
     list();
   } else if (addComp.test(text)) {
     add(text, addComp);
+  } else if (editComp.test(text)) {
+    edit(text, editComp);
   } else if (rmComp.test(text)) {
     remove(text, rmComp);
   } else if (text === "help\n") {
@@ -94,7 +95,6 @@ function list() {
  */
 
 function add(value, plus) {
-
   let userInput = value.replace(plus, "").trim();
 
   let data = getData();
@@ -106,11 +106,44 @@ function add(value, plus) {
       data.push({ unchecked: "[]", checked: "[✓]", task: userInput });
       console.log(data);
     } else {
-      console.log(`${userInput} is the ${index+1} task in the list`);
+      console.log(`${userInput} is the ${index + 1} task in the list`);
     }
   } else {
-    
-    console.log("Please provide a task after the \"add\" command");
+    console.log('Please provide a task after the "add" command');
+  }
+}
+
+/**
+ * edit x : it edit item into the array
+ */
+
+function edit(value, update) {
+  let input = value.replace(update, "").trim();
+
+  let index = input.match(/[0-9]/);
+
+  let userInput = input.replace(index, "").trim();
+
+  let data = getData();
+
+  if (data.length !== 0) {
+    if (index !== null && userInput !== "") {
+      index = parseInt(input.match(/[0-9]/).input);
+      data[index - 1].task = userInput.toString();
+      console.log(data);
+    } else {
+      if (userInput !== "" ) {
+        console.log(data);
+        data[data.length - 1].task = userInput.toString();
+        console.log(data);
+      } else {
+        console.log(
+          "Please specify which task you wish to update by providing the task number or the value to update to"
+        );
+      }
+    }
+  } else {
+    console.log("No Task available to update");
   }
 }
 
