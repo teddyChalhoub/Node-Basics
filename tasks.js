@@ -32,10 +32,15 @@ function startApp(name) {
  * @returns {void}
  */
 function onDataReceived(text) {
+  let helloComp = /hello/;
+  let listComp = /list/;
+
   if (text === "quit\n" || text === "exit\n") {
     quit();
-  } else if (text.slice(0, 5) === "hello") {
+  } else if (helloComp.test(text)) {
     hello(text);
+  } else if (listComp.test(text)) {
+    list();
   } else if (text === "help\n") {
     help();
   } else {
@@ -65,6 +70,22 @@ function hello(value) {
 }
 
 /**
+ * list : list all the items that exist in the array
+ */
+
+function list() {
+  let arrayList = [
+    { unchecked: "[]", checked: "[✓]", task: 1 },
+    { unchecked: "[]", checked: "[✓]", task: 2 },
+    { unchecked: "[]", checked: "[✓]", task: 3 },
+  ];
+
+  arrayList.map((data) => {
+    console.log(`${data.task}`);
+  });
+}
+
+/**
  * Exits the application
  *
  * @returns {void}
@@ -90,8 +111,15 @@ function help() {
   const extHello =
     "extended hello : will handle the existing spaces with any phrase that start with hello";
   console.log(
-    "Available commands : \n" + hello + "\n" + quit + "\n" + help + "\n"
-  +extHello);
+    "Available commands : \n" +
+      hello +
+      "\n" +
+      quit +
+      "\n" +
+      help +
+      "\n" +
+      extHello
+  );
 }
 
 // The following line starts the application
