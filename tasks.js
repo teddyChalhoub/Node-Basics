@@ -32,8 +32,6 @@ function startApp(name) {
  * @returns {void}
  */
 function onDataReceived(text) {
-  // const newText = t
-
   
   if (text === "quit\n" || text === "exit\n") {
     quit();
