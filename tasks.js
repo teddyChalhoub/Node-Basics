@@ -122,7 +122,7 @@ function remove(value) {
 
   let data = getData();
   if (data.length !== 0 && data.length === spesIndex[0]) {
-    if (spesIndex !== null ) {
+    if (spesIndex !== null) {
       spesIndex = spesIndex[0];
 
       if (spesIndex === "1") {
@@ -150,10 +150,16 @@ function quit() {
 
 /**Help part
  * provided you with the command you can use when running tasks.js file:
- * help : display the commands available
+
  * hello : will display hello with exclamation mark at the end
+ * extended hello : will handle the existing spaces with any phrase provided by the * user
+ * list : "list: list all the items added to the list;
+ * add : add nb : add task to the list  (you should add a task after add command);
+ * remove : remove: removes the last item in the list ;
+ * remove : remove nb : after remove command add a number to specify which item you  * wish to remove from the list; 
  * quit or exit : will stop the program from running
- * extended hello : will handle the existing spaces with any phrase that start with * hello
+ * help : display the commands available
+ 
  * @returns {void}
  * */
 
@@ -163,15 +169,32 @@ function help() {
   const help = "help : display the commands available";
   const extHello =
     "extended hello : will handle the existing spaces with any phrase that start with hello";
+
+  const list = "list: list all the items added to the list";
+  const add =
+    "add nb : add task to the list  (you should add a task after add command)";
+  const remove = "remove: removes the last item in the list ";
+  const remove2 =
+    "remove nb : after remove command add a number to specify which item you wish to remove from the list";
+
   console.log(
     "Available commands : \n" +
       hello +
       "\n" +
+      extHello+
+      "\n" +
+      list +
+      "\n" +
+      add +
+      "\n" +
+      remove +
+      "\n" +
+      remove2 +
+      "\n" +
       quit +
       "\n" +
       help +
-      "\n" +
-      extHello
+      "\n" 
   );
 }
 
