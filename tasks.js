@@ -34,6 +34,9 @@ function startApp(name) {
 function onDataReceived(text) {
   let helloComp = /hello/;
   let listComp = /list/;
+  let addComp = /add/;
+
+  // console.log(text.match(nbList)[0]);
 
   if (text === "quit\n" || text === "exit\n") {
     quit();
@@ -41,6 +44,8 @@ function onDataReceived(text) {
     hello(text);
   } else if (listComp.test(text)) {
     list();
+  } else if (addComp.test(text)) {
+    add(text);
   } else if (text === "help\n") {
     help();
   } else {
@@ -74,15 +79,35 @@ function hello(value) {
  */
 
 function list() {
-  let arrayList = [
-    { unchecked: "[]", checked: "[✓]", task: 1 },
-    { unchecked: "[]", checked: "[✓]", task: 2 },
-    { unchecked: "[]", checked: "[✓]", task: 3 },
-  ];
+  let data = getData();
 
-  arrayList.map((data) => {
-    console.log(`${data.task}`);
+  data.map((values) => {
+    console.log(`${values.task}`);
   });
+}
+
+/**
+ * add x : it add an item into the array
+ */
+
+function add(value) {
+  let nbList = /[0-9]/;
+  let nb = value.match(nbList);
+
+  if (nb !== null) {
+    let data = getData();
+
+    let index = data.findIndex((x) => x.task === nb[0]);
+
+    if (index === -1) {
+      data.push({ unchecked: "[]", checked: "[✓]", task: nb[0] });
+    }
+
+    list();
+    
+  } else {
+    console.log('Error : Right command is " add task " ');
+  }
 }
 
 /**
@@ -120,6 +145,16 @@ function help() {
       "\n" +
       extHello
   );
+}
+
+function getData() {
+  let arrayList = [
+    { unchecked: "[]", checked: "[✓]", task: 1 },
+    { unchecked: "[]", checked: "[✓]", task: 2 },
+    { unchecked: "[]", checked: "[✓]", task: 3 },
+  ];
+
+  return arrayList;
 }
 
 // The following line starts the application
