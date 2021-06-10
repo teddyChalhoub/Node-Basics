@@ -32,10 +32,13 @@ function startApp(name) {
  * @returns {void}
  */
 function onDataReceived(text) {
+  // const newText = t
+
+  
   if (text === "quit\n" || text === "exit\n") {
     quit();
-  } else if (text === "hello\n") {
-    hello();
+  } else if (text.slice(0,5) === "hello") {
+    hello(text);
   } else if (text === "help\n") {
     help();
   } else {
@@ -59,8 +62,9 @@ function unknownCommand(c) {
  *
  * @returns {void}
  */
-function hello() {
-  console.log("hello!");
+function hello(value) {
+  const newValue = value.replace(/ +/g," ");
+  console.log( newValue.trim() +"!");
 }
 
 /**
