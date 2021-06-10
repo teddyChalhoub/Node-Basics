@@ -35,6 +35,7 @@ function onDataReceived(text) {
   let helloComp = /hello/;
   let listComp = /list/;
   let addComp = /add/;
+  let rmComp = /remove/;
 
   // console.log(text.match(nbList)[0]);
 
@@ -46,6 +47,8 @@ function onDataReceived(text) {
     list();
   } else if (addComp.test(text)) {
     add(text);
+  } else if (rmComp.test(text)) {
+    remove(text);
   } else if (text === "help\n") {
     help();
   } else {
@@ -104,17 +107,42 @@ function add(value) {
     }
 
     list();
-    
   } else {
     console.log('Error : Right command is " add task " ');
   }
 }
 
 /**
- * Exits the application
- *
- * @returns {void}
+ * remove : it remove the last element from the list
+ * remove nb : it remove the specified number in the list
  */
+function remove(value) {
+  let nbList = /[0-9]/;
+  let spesIndex = value.match(nbList);
+
+  let data = getData();
+  if (data.length !== 0 && data.length === spesIndex[0]) {
+    if (spesIndex !== null ) {
+      spesIndex = spesIndex[0];
+
+      if (spesIndex === "1") {
+        data.shift();
+        console.log(data);
+      } else {
+        spesIndex--;
+        data.splice(spesIndex, spesIndex);
+        console.log(data);
+      }
+    } else {
+      data.pop();
+      console.log(data);
+    }
+  } else {
+    console.log(`There is ${data.length} item\\s in the list`);
+  }
+}
+/**
+ * Exits the application
 function quit() {
   console.log("Quitting now, goodbye!");
   process.exit();
@@ -150,8 +178,8 @@ function help() {
 function getData() {
   let arrayList = [
     { unchecked: "[]", checked: "[✓]", task: 1 },
-    { unchecked: "[]", checked: "[✓]", task: 2 },
-    { unchecked: "[]", checked: "[✓]", task: 3 },
+    // { unchecked: "[]", checked: "[✓]", task: 2 },
+    // { unchecked: "[]", checked: "[✓]", task: 3 },
   ];
 
   return arrayList;
