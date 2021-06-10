@@ -32,10 +32,9 @@ function startApp(name) {
  * @returns {void}
  */
 function onDataReceived(text) {
-  
   if (text === "quit\n" || text === "exit\n") {
     quit();
-  } else if (text.slice(0,5) === "hello") {
+  } else if (text.slice(0, 5) === "hello") {
     hello(text);
   } else if (text === "help\n") {
     help();
@@ -57,12 +56,12 @@ function unknownCommand(c) {
 
 /**
  * Says hello
- *
+ * @param  {string} value string input provided by the user
  * @returns {void}
  */
 function hello(value) {
-  const newValue = value.replace(/ +/g," ");
-  console.log( newValue.trim() +"!");
+  const newValue = value.replace(/ +/g, " ");
+  console.log(newValue.trim() + "!");
 }
 
 /**
@@ -76,12 +75,23 @@ function quit() {
 }
 
 /**Help part
- * provide you with the command you can use when running tasks.js file 
+ * provided you with the command you can use when running tasks.js file:
+ * help : display the commands available
+ * hello : will display hello with exclamation mark at the end
+ * quit or exit : will stop the program from running
+ * extended hello : will handle the existing spaces with any phrase that start with * hello
  * @returns {void}
  * */
 
 function help() {
-  console.log("Available commands : \n hello \n quit \n help\n");
+  const hello = "hello : will display hello with exclamation mark at the end";
+  const quit = "quit or exit : will stop the program from running";
+  const help = "help : display the commands available";
+  const extHello =
+    "extended hello : will handle the existing spaces with any phrase that start with hello";
+  console.log(
+    "Available commands : \n" + hello + "\n" + quit + "\n" + help + "\n"
+  +extHello);
 }
 
 // The following line starts the application
