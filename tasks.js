@@ -73,7 +73,10 @@ function quit() {
   process.exit();
 }
 
-/**Help part */
+/**Help part
+ * provide you with the command you can use when running tasks.js file 
+ * @returns {void}
+ * */
 
 function help() {
   console.log("Available commands : \n hello \n quit \n help\n");
