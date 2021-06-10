@@ -46,9 +46,9 @@ function onDataReceived(text) {
   } else if (listComp.test(text)) {
     list();
   } else if (addComp.test(text)) {
-    add(text);
+    add(text, addComp);
   } else if (rmComp.test(text)) {
-    remove(text);
+    remove(text, rmComp);
   } else if (text === "help\n") {
     help();
   } else {
@@ -93,22 +93,24 @@ function list() {
  * add x : it add an item into the array
  */
 
-function add(value) {
-  let nbList = /[0-9]/;
-  let nb = value.match(nbList);
+function add(value, plus) {
 
-  if (nb !== null) {
-    let data = getData();
+  let userInput = value.replace(plus, "").trim();
 
-    let index = data.findIndex((x) => x.task === nb[0]);
+  let data = getData();
 
+  let index = data.findIndex((x) => x.task === userInput);
+
+  if (userInput !== "") {
     if (index === -1) {
-      data.push({ unchecked: "[]", checked: "[✓]", task: nb[0] });
+      data.push({ unchecked: "[]", checked: "[✓]", task: userInput });
+      console.log(data);
+    } else {
+      console.log(`${userInput} is the ${index+1} task in the list`);
     }
-
-    list();
   } else {
-    console.log('Error : Right command is " add task " ');
+    
+    console.log("Please provide a task after the \"add\" command");
   }
 }
 
@@ -116,31 +118,35 @@ function add(value) {
  * remove : it remove the last element from the list
  * remove nb : it remove the specified number in the list
  */
-function remove(value) {
-  let nbList = /[0-9]/;
-  let spesIndex = value.match(nbList);
+function remove(value, rm) {
+  let userInput = value.replace(rm, "").trim();
 
   let data = getData();
-  if (data.length !== 0 && data.length === spesIndex[0]) {
-    if (spesIndex !== null) {
-      spesIndex = spesIndex[0];
 
-      if (spesIndex === "1") {
-        data.shift();
-        console.log(data);
+  let index = data.findIndex((x) => x.task === userInput);
+
+  if (data.length !== 0) {
+    if (userInput !== "") {
+      if (index !== -1) {
+        if (index === 0) {
+          data.shift();
+          console.log(data);
+        } else {
+          data.splice(index, index);
+          console.log(data);
+        }
       } else {
-        spesIndex--;
-        data.splice(spesIndex, spesIndex);
-        console.log(data);
+        console.log(`${userInput} doesn't exist in the list`);
       }
     } else {
       data.pop();
       console.log(data);
     }
   } else {
-    console.log(`There is ${data.length} item\\s in the list`);
+    console.log("List is empty");
   }
 }
+
 /**
  * Exits the application
 function quit() {
@@ -181,7 +187,7 @@ function help() {
     "Available commands : \n" +
       hello +
       "\n" +
-      extHello+
+      extHello +
       "\n" +
       list +
       "\n" +
@@ -194,15 +200,15 @@ function help() {
       quit +
       "\n" +
       help +
-      "\n" 
+      "\n"
   );
 }
 
 function getData() {
   let arrayList = [
-    { unchecked: "[]", checked: "[✓]", task: 1 },
-    // { unchecked: "[]", checked: "[✓]", task: 2 },
-    // { unchecked: "[]", checked: "[✓]", task: 3 },
+    { unchecked: "[]", checked: "[✓]", task: "1" },
+    { unchecked: "[]", checked: "[✓]", task: "teddy chalhoub" },
+    { unchecked: "[]", checked: "[✓]", task: "3" },
   ];
 
   return arrayList;
