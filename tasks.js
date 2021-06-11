@@ -17,6 +17,12 @@ function startApp(name) {
 }
 
 /**
+ * calling fs
+ */
+
+const fs = require("fs");
+
+/**
  * Decides what to do depending on the data that was received
  * This function receives the input sent by the user.
  *
@@ -91,8 +97,12 @@ function hello(value) {
 function list() {
   let data = getData();
 
-  data.map((values,index) => {
-    console.log(`${index+1} -  ${values.checkBox} ${values.task}`);
+  data.map((values, index) => {
+    if (values[index].done) {
+      console.log(`${index + 1} -  ${values[index].checked} ${values.task}`);
+    }else{
+      console.log(`${index + 1} -  ${values[index].unchecked} ${values.task}`);
+    }
   });
 }
 
@@ -109,8 +119,12 @@ function add(value, plus) {
 
   if (userInput !== "") {
     if (index === -1) {
-      data.push({ unchecked: "[]", done: false, task: userInput });
-  
+      data.push({
+        unchecked: "[ ]",
+        checked: "[✓]",
+        done: false,
+        task: userInput,
+      });
     } else {
       console.log(`${userInput} is the ${index + 1} task in the list`);
     }
@@ -139,7 +153,6 @@ function edit(value, update) {
       console.log(`task ${index} changed to ${userInput.toString()}`);
     } else {
       if (userInput !== "") {
-       
         data[data.length - 1].task = userInput.toString();
         console.log(`task ${data.length} changed to ${userInput.toString()}`);
       } else {
@@ -169,10 +182,8 @@ function check(value, checkT) {
       let index = parseInt(input.match(/[0-9]/).input);
 
       if (data.length >= index) {
-        if (!data[index - 1].done) {
-          data[index - 1].checkBox = "[✓]";
-          console.log(`task ${index} is marked as checked`);
-        }
+        data[index - 1].done = true;
+        console.log(`task ${index} is marked as checked`);
       } else {
         console.log("Task not available");
       }
@@ -202,10 +213,8 @@ function uncheck(value, uncheckT) {
       let index = parseInt(input.match(/[0-9]/).input);
       console.log(index);
       if (data.length >= index) {
-        if (data[index - 1].done) {
-          data[index - 1].checkBox = "[]";
-          console.log(`task ${index} is marked as unchecked`);
-        }
+        data[index - 1].checkBox = false;
+        console.log(`task ${index} is marked as unchecked`);
       } else {
         console.log("Task not available");
       }
@@ -306,14 +315,19 @@ function help() {
   );
 }
 
-function getData() {
-  let arrayList = [
-    { checkBox: "[ ]", done: false, task: "1" },
-    { checkBox: "[ ]", done: false, task: "teddy chalhoub" },
-    { checkBox: "[✓]", done: true, task: "3" },
-    { checkBox: "[✓]", done: true, task: "get milk" },
-  ];
+[
+  { task: "", done: true },
+  { task: "", done: true },
+];
 
+function getData() {
+  let arrayList = [];
+  try {
+    arrayList = JSON.parse(fs.readFileSync("database.json"));
+    
+  } catch (err) {
+    console.log(e);
+  }
   return arrayList;
 }
 
