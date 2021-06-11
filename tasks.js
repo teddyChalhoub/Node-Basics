@@ -37,6 +37,8 @@ function onDataReceived(text) {
   let addComp = /add/;
   let rmComp = /remove/;
   let editComp = /edit/;
+  let checkComp = /check/;
+  let uncheckComp = /uncheck/;
 
   if (text === "quit\n" || text === "exit\n") {
     quit();
@@ -48,6 +50,10 @@ function onDataReceived(text) {
     add(text, addComp);
   } else if (editComp.test(text)) {
     edit(text, editComp);
+  } else if (checkComp.test(text) && text.startsWith("check")) {
+    check(text, checkComp);
+  } else if (uncheckComp.test(text)) {
+    uncheck(text, uncheckComp);
   } else if (rmComp.test(text)) {
     remove(text, rmComp);
   } else if (text === "help\n") {
@@ -85,8 +91,8 @@ function hello(value) {
 function list() {
   let data = getData();
 
-  data.map((values) => {
-    console.log(`${values.task}`);
+  data.map((values,index) => {
+    console.log(`${index+1} -  ${values.checkBox} ${values.task}`);
   });
 }
 
@@ -103,8 +109,8 @@ function add(value, plus) {
 
   if (userInput !== "") {
     if (index === -1) {
-      data.push({ unchecked: "[]", done:false, task: userInput });
-      console.log(data);
+      data.push({ unchecked: "[]", done: false, task: userInput });
+  
     } else {
       console.log(`${userInput} is the ${index + 1} task in the list`);
     }
@@ -130,12 +136,12 @@ function edit(value, update) {
     if (index !== null && userInput !== "") {
       index = parseInt(input.match(/[0-9]/).input);
       data[index - 1].task = userInput.toString();
-      console.log(data);
+      console.log(`task ${index} changed to ${userInput.toString()}`);
     } else {
-      if (userInput !== "" ) {
-        console.log(data);
+      if (userInput !== "") {
+       
         data[data.length - 1].task = userInput.toString();
-        console.log(data);
+        console.log(`task ${data.length} changed to ${userInput.toString()}`);
       } else {
         console.log(
           "Please specify which task you wish to update by providing the task number or the value to update to"
@@ -148,8 +154,74 @@ function edit(value, update) {
 }
 
 /**
+ * check 1 : it check that the task are done and display it for the user
+ *
+ */
+
+function check(value, checkT) {
+  let input = value.replace(checkT, "").trim();
+
+  let index = input.match(/[0-9]/);
+
+  let data = getData();
+  if (data.length !== 0) {
+    if (index !== null) {
+      let index = parseInt(input.match(/[0-9]/).input);
+
+      if (data.length >= index) {
+        if (!data[index - 1].done) {
+          data[index - 1].checkBox = "[✓]";
+          console.log(`task ${index} is marked as checked`);
+        }
+      } else {
+        console.log("Task not available");
+      }
+    } else {
+      console.log("You should provide which task to check");
+    }
+  } else {
+    console.log("No Task Available");
+  }
+}
+
+/**
+ * uncheck 1 : it uncheck the targeted task and display it for the user
+ *
+ */
+
+function uncheck(value, uncheckT) {
+  let input = value.replace(uncheckT, "").trim();
+
+  let index = input.match(/[0-9]/);
+
+  let data = getData();
+  console.log("outside if");
+
+  if (data.length !== 0) {
+    if (index !== null) {
+      let index = parseInt(input.match(/[0-9]/).input);
+      console.log(index);
+      if (data.length >= index) {
+        if (data[index - 1].done) {
+          data[index - 1].checkBox = "[]";
+          console.log(`task ${index} is marked as unchecked`);
+        }
+      } else {
+        console.log("Task not available");
+      }
+    } else {
+      console.log("You should provide which task to check");
+    }
+  } else {
+    console.log("No Available Task");
+  }
+}
+
+/**
  * remove : it remove the last element from the list
  * remove nb : it remove the specified number in the list
+ * @param {*} value
+ * @param {*} rm
  */
 function remove(value, rm) {
   let userInput = value.replace(rm, "").trim();
@@ -163,17 +235,14 @@ function remove(value, rm) {
       if (index !== -1) {
         if (index === 0) {
           data.shift();
-          console.log(data);
         } else {
           data.splice(index, index);
-          console.log(data);
         }
       } else {
         console.log(`${userInput} doesn't exist in the list`);
       }
     } else {
       data.pop();
-      console.log(data);
     }
   } else {
     console.log("List is empty");
@@ -239,10 +308,10 @@ function help() {
 
 function getData() {
   let arrayList = [
-    { checkBox: "[]",done: false, task: "1" },
-    { checkBox: "[]", done: false, task: "teddy chalhoub" },
-    { checkBox: "[✓]",done:true, task: "3" },
-    { checkBox: "[✓]",done:true, task: "get milk" },
+    { checkBox: "[ ]", done: false, task: "1" },
+    { checkBox: "[ ]", done: false, task: "teddy chalhoub" },
+    { checkBox: "[✓]", done: true, task: "3" },
+    { checkBox: "[✓]", done: true, task: "get milk" },
   ];
 
   return arrayList;
