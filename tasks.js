@@ -103,7 +103,7 @@ function add(value, plus) {
 
   if (userInput !== "") {
     if (index === -1) {
-      data.push({ unchecked: "[]", checked: "[✓]", task: userInput });
+      data.push({ unchecked: "[]", done:false, task: userInput });
       console.log(data);
     } else {
       console.log(`${userInput} is the ${index + 1} task in the list`);
@@ -239,9 +239,10 @@ function help() {
 
 function getData() {
   let arrayList = [
-    { unchecked: "[]", checked: "[✓]", task: "1" },
-    { unchecked: "[]", checked: "[✓]", task: "teddy chalhoub" },
-    { unchecked: "[]", checked: "[✓]", task: "3" },
+    { checkBox: "[]",done: false, task: "1" },
+    { checkBox: "[]", done: false, task: "teddy chalhoub" },
+    { checkBox: "[✓]",done:true, task: "3" },
+    { checkBox: "[✓]",done:true, task: "get milk" },
   ];
 
   return arrayList;
