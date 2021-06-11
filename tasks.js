@@ -276,7 +276,9 @@ function quit() {
  * remove : remove nb : after remove command add a number to specify which item you  * wish to remove from the list; 
  * quit or exit : will stop the program from running
  * help : display the commands available
- 
+ * check : mark that the task is done;
+ * unCheck : unmark the task
+ *
  * @returns {void}
  * */
 
@@ -293,6 +295,8 @@ function help() {
   const remove = "remove: removes the last item in the list ";
   const remove2 =
     "remove nb : after remove command add a number to specify which item you wish to remove from the list";
+    const check = "check : mark that the task is done";
+    const uncheck = "unCheck : unmark the task";
 
   console.log(
     "Available commands : \n" +
@@ -307,6 +311,10 @@ function help() {
       remove +
       "\n" +
       remove2 +
+      "\n" +
+      check+
+      "\n"+
+      uncheck+
       "\n" +
       quit +
       "\n" +
