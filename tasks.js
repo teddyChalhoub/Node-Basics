@@ -22,9 +22,22 @@ function startApp(name) {
  */
 
 const fs = require("fs");
+const process = require("process");
+let arrayList;
 
-let arrayList = getData();
-const configDatabase = "./database.json";
+const userConfigDatabse = process.argv[2];
+
+let configDatabase;
+
+if (userConfigDatabse == undefined) {
+  configDatabase = "./database.json";
+} else {
+  configDatabase = `./${userConfigDatabse}`;
+}
+
+arrayList = getData();
+
+console.log(configDatabase);
 
 /**
  * Decides what to do depending on the data that was received
@@ -99,7 +112,6 @@ function hello(value) {
  */
 
 function list() {
-
   if (arrayList.length != 0) {
     arrayList.map((values, index) => {
       if (values.done) {
@@ -322,19 +334,17 @@ function help() {
   );
 }
 
-
-
 function getData() {
-  try {
+  if (fs.existsSync(configDatabase)) {
+    console.log("exist");
     arrayList = JSON.parse(fs.readFileSync(configDatabase));
     return arrayList;
-  } catch (err) {
-    console.log(err);
+  } else {
+    let json = JSON.stringify([]);
+    fs.writeFileSync(configDatabase, json);
   }
 }
-
 function setData() {
-  
   let json = JSON.stringify(arrayList);
   fs.writeFileSync(configDatabase, json, (err) => {
     if (err) throw err;
