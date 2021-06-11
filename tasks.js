@@ -37,8 +37,6 @@ if (userConfigDatabse == undefined) {
 
 arrayList = getData();
 
-console.log(configDatabase);
-
 /**
  * Decides what to do depending on the data that was received
  * This function receives the input sent by the user.
@@ -155,13 +153,12 @@ function add(value, plus) {
 function edit(value, update) {
   let input = value.replace(update, "").trim();
 
-  let index = input.match(/[0-9]/);
-
+  let index = input.match(/\d+/);
   let userInput = input.replace(index, "").trim();
 
   if (arrayList.length !== 0) {
     if (index !== null && userInput !== "") {
-      index = parseInt(input.match(/[0-9]/).input);
+      index = parseInt(input.match(/\d+/)[0]);
       arrayList[index - 1].task = userInput.toString();
       console.log(`task ${index} changed to ${userInput.toString()}`);
     } else {
@@ -189,11 +186,11 @@ function edit(value, update) {
 function check(value, checkT) {
   let input = value.replace(checkT, "").trim();
 
-  let index = input.match(/[0-9]/);
+  let index = input.match(/\d+/);
 
   if (arrayList.length !== 0) {
     if (index !== null) {
-      let index = parseInt(input.match(/[0-9]/).input);
+      let index = parseInt(input.match(/\d+/)[0]);
 
       if (arrayList.length >= index) {
         arrayList[index - 1].done = true;
@@ -217,14 +214,11 @@ function check(value, checkT) {
 function uncheck(value, uncheckT) {
   let input = value.replace(uncheckT, "").trim();
 
-  let index = input.match(/[0-9]/);
-
-  console.log("outside if");
+  let index = input.match(/\d+/);
 
   if (arrayList.length !== 0) {
     if (index !== null) {
-      let index = parseInt(input.match(/[0-9]/).input);
-      console.log(index);
+      let index = parseInt(input.match(/\d+/)[0]);
       if (arrayList.length >= index) {
         arrayList[index - 1].done = false;
         console.log(`task ${index} is marked as unchecked`);
@@ -335,13 +329,16 @@ function help() {
 }
 
 function getData() {
-  if (fs.existsSync(configDatabase)) {
-    console.log("exist");
-    arrayList = JSON.parse(fs.readFileSync(configDatabase));
-    return arrayList;
-  } else {
-    let json = JSON.stringify([]);
-    fs.writeFileSync(configDatabase, json);
+  try {
+    if (fs.existsSync(configDatabase)) {
+      arrayList = JSON.parse(fs.readFileSync(configDatabase));
+      return arrayList;
+    } else {
+      let json = JSON.stringify([]);
+      fs.writeFileSync(configDatabase, json);
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 function setData() {
