@@ -14,6 +14,7 @@ function startApp(name) {
   process.stdin.on("data", onDataReceived);
   console.log(`Welcome to ${name}'s application!`);
   console.log("--------------------");
+  getData();
 }
 
 /**
@@ -21,6 +22,9 @@ function startApp(name) {
  */
 
 const fs = require("fs");
+
+let arrayList = getData();
+const configDatabase = "./database.json";
 
 /**
  * Decides what to do depending on the data that was received
@@ -95,15 +99,16 @@ function hello(value) {
  */
 
 function list() {
-  let data = getData();
 
-  data.map((values, index) => {
-    if (values[index].done) {
-      console.log(`${index + 1} -  ${values[index].checked} ${values.task}`);
-    }else{
-      console.log(`${index + 1} -  ${values[index].unchecked} ${values.task}`);
-    }
-  });
+  if (arrayList.length != 0) {
+    arrayList.map((values, index) => {
+      if (values.done) {
+        console.log(`${index + 1} -  ${values.checked} ${values.task}`);
+      } else {
+        console.log(`${index + 1} -  ${values.unchecked} ${values.task}`);
+      }
+    });
+  }
 }
 
 /**
@@ -113,13 +118,11 @@ function list() {
 function add(value, plus) {
   let userInput = value.replace(plus, "").trim();
 
-  let data = getData();
-
-  let index = data.findIndex((x) => x.task === userInput);
+  let index = arrayList.findIndex((x) => x.task === userInput);
 
   if (userInput !== "") {
     if (index === -1) {
-      data.push({
+      arrayList.push({
         unchecked: "[ ]",
         checked: "[✓]",
         done: false,
@@ -144,17 +147,17 @@ function edit(value, update) {
 
   let userInput = input.replace(index, "").trim();
 
-  let data = getData();
-
-  if (data.length !== 0) {
+  if (arrayList.length !== 0) {
     if (index !== null && userInput !== "") {
       index = parseInt(input.match(/[0-9]/).input);
-      data[index - 1].task = userInput.toString();
+      arrayList[index - 1].task = userInput.toString();
       console.log(`task ${index} changed to ${userInput.toString()}`);
     } else {
       if (userInput !== "") {
-        data[data.length - 1].task = userInput.toString();
-        console.log(`task ${data.length} changed to ${userInput.toString()}`);
+        arrayList[arrayList.length - 1].task = userInput.toString();
+        console.log(
+          `task ${arrayList.length} changed to ${userInput.toString()}`
+        );
       } else {
         console.log(
           "Please specify which task you wish to update by providing the task number or the value to update to"
@@ -176,13 +179,12 @@ function check(value, checkT) {
 
   let index = input.match(/[0-9]/);
 
-  let data = getData();
-  if (data.length !== 0) {
+  if (arrayList.length !== 0) {
     if (index !== null) {
       let index = parseInt(input.match(/[0-9]/).input);
 
-      if (data.length >= index) {
-        data[index - 1].done = true;
+      if (arrayList.length >= index) {
+        arrayList[index - 1].done = true;
         console.log(`task ${index} is marked as checked`);
       } else {
         console.log("Task not available");
@@ -205,15 +207,14 @@ function uncheck(value, uncheckT) {
 
   let index = input.match(/[0-9]/);
 
-  let data = getData();
   console.log("outside if");
 
-  if (data.length !== 0) {
+  if (arrayList.length !== 0) {
     if (index !== null) {
       let index = parseInt(input.match(/[0-9]/).input);
       console.log(index);
-      if (data.length >= index) {
-        data[index - 1].checkBox = false;
+      if (arrayList.length >= index) {
+        arrayList[index - 1].done = false;
         console.log(`task ${index} is marked as unchecked`);
       } else {
         console.log("Task not available");
@@ -235,23 +236,19 @@ function uncheck(value, uncheckT) {
 function remove(value, rm) {
   let userInput = value.replace(rm, "").trim();
 
-  let data = getData();
-
-  let index = data.findIndex((x) => x.task === userInput);
-
-  if (data.length !== 0) {
+  if (arrayList.length !== 0) {
     if (userInput !== "") {
-      if (index !== -1) {
-        if (index === 0) {
-          data.shift();
+      if (arrayList.length >= userInput) {
+        if (userInput - 1 === 0) {
+          arrayList.shift();
         } else {
-          data.splice(index, index);
+          arrayList.splice(userInput - 1, userInput - 1);
         }
       } else {
-        console.log(`${userInput} doesn't exist in the list`);
+        console.log(`task ${userInput} doesn't exist in the list`);
       }
     } else {
-      data.pop();
+      arrayList.pop();
     }
   } else {
     console.log("List is empty");
@@ -259,9 +256,11 @@ function remove(value, rm) {
 }
 
 /**
- * Exits the application
+ * Exits the application*/
+
 function quit() {
   console.log("Quitting now, goodbye!");
+  setData();
   process.exit();
 }
 
@@ -295,8 +294,8 @@ function help() {
   const remove = "remove: removes the last item in the list ";
   const remove2 =
     "remove nb : after remove command add a number to specify which item you wish to remove from the list";
-    const check = "check : mark that the task is done";
-    const uncheck = "unCheck : unmark the task";
+  const check = "check : mark that the task is done";
+  const uncheck = "unCheck : unmark the task";
 
   console.log(
     "Available commands : \n" +
@@ -312,9 +311,9 @@ function help() {
       "\n" +
       remove2 +
       "\n" +
-      check+
-      "\n"+
-      uncheck+
+      check +
+      "\n" +
+      uncheck +
       "\n" +
       quit +
       "\n" +
@@ -323,20 +322,23 @@ function help() {
   );
 }
 
-[
-  { task: "", done: true },
-  { task: "", done: true },
-];
+
 
 function getData() {
-  let arrayList = [];
   try {
-    arrayList = JSON.parse(fs.readFileSync("database.json"));
-    
+    arrayList = JSON.parse(fs.readFileSync(configDatabase));
+    return arrayList;
   } catch (err) {
-    console.log(e);
+    console.log(err);
   }
-  return arrayList;
+}
+
+function setData() {
+  
+  let json = JSON.stringify(arrayList);
+  fs.writeFileSync(configDatabase, json, (err) => {
+    if (err) throw err;
+  });
 }
 
 // The following line starts the application
